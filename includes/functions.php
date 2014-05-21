@@ -186,11 +186,9 @@ function wc_gallery_shortcode($blank, $attr) {
 		foreach ( $attachments as $id => $attachment ) {
 			if ( $customlink ) {
 				$image_output = wc_gallery_get_attachment_link( $id, $size, false, false, false, $targetsize, $customlink );
-				$image_output = preg_replace( '/^<a /', '<a rel="gallery-'.$instance.'" ', $image_output );
 			}
 			else if ( ! empty( $link ) && 'file' === $link ) {
 				$image_output = wc_gallery_get_attachment_link( $id, $size, false, false, false, $targetsize, $customlink );
-				$image_output = preg_replace( '/^<a /', '<a rel="gallery-'.$instance.'" ', $image_output );
 			}
 			else if ( ! empty( $link ) && 'none' === $link )
 				$image_output = wp_get_attachment_image( $id, $size, false );
@@ -298,7 +296,7 @@ function wc_gallery_print_media_templates() {
 		<label class="setting">
 			<span><?php _e( 'Image Size', 'wc_gallery' ); ?></span>
 			<select class="size" name="size" data-setting="size">
-				<?
+				<?php
 				$sizes = apply_filters( 'image_size_names_choose', array(
 					'thumbnail' => __('Thumbnail'),
 					'medium'    => __('Medium'),
