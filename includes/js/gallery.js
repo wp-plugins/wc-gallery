@@ -16,10 +16,10 @@
 		var containerWidth = $container.width();
 
 		if ( isNaN( gutterWidth ) ) {
-			gutterWidth = .020;
+			gutterWidth = 5;
 		}
-		else if ( gutterWidth > 0.05 || gutterWidth < 0 ) {
-			gutterWidth = .020;
+		else if ( gutterWidth > 30 || gutterWidth < 0 ) {
+			gutterWidth = 5;
 		}
 
 		if ( columns > 1 ) {
@@ -38,7 +38,7 @@
 			}
 		}
 
-		var gutterWidth = Math.floor( containerWidth * gutterWidth );
+		gutterWidth = parseInt( gutterWidth );
 
 		var allGutters = gutterWidth * ( columns - 1 );
 		var contentWidth = containerWidth - allGutters;
@@ -99,31 +99,141 @@
 
 		if( jQuery().wcflexslider) {
 			$(window).load(function() {
-				$('.gallery.wcslider.wcflexslider').wcflexslider({
-					prevText: "",
-					nextText: "",
-					smoothHeight: false,
-					slideshow: false,
-					animation:"fade"
-				});
-				$('.gallery.wcslider2.wcflexslider').wcflexslider({
-					prevText: "",
-					nextText: "",
-					smoothHeight: true,
-					slideshow: false,
-					animation:"slide"
-				});
-				$('.gallery.wccarousel.wcflexslider').wcflexslider({
-					prevText: "",
-					nextText: "",
-					smoothHeight: false,
-					slideshow: false,
-					animation: "slide",
-					animationLoop: false,
-					itemWidth: 270,
-					itemMargin: 5
+				$('.wcflexslider-container').each( function() {
+					var $this = $(this);
+					var $flex = $(this).children('.gallery.wcflexslider');
+					var columns = parseInt( $flex.data('columns') );
+					var columnsTablet = columns - 1;
+					var columnsPhone = columns - 2;
+					var gutterWidth = $flex.data('gutterWidth');
+					var hideControls = $flex.data('hideControls');
+					var showNav = hideControls ? false : true;
+					var containerWidth = $this.width();
+
+					gutterWidth = parseInt( gutterWidth );
+
+					if ( $flex.hasClass('wcslider') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: false,
+							slideshow: false,
+							animation:"fade"
+						});
+					}
+					else if ( $flex.hasClass('wcslider2') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: false,
+							animation:"slide"
+						});
+					}
+					else if ( $flex.hasClass('wcsliderauto') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: true,
+							animation:"slide"
+						});
+					}
+					else if ( $flex.hasClass('wccarousel') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: false,
+							slideshow: false,
+							animation: "slide",
+							animationLoop: false,
+							itemWidth: 270,
+							itemMargin: gutterWidth 
+						});
+					}
+					else if ( $flex.hasClass('wcslider3bottomlinks') || $flex.hasClass('wcslider4bottomlinks') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: false,
+							slideshow: true,
+							animation:"slide"
+						});
+					}
 				});
 			});
+		}
+		if( jQuery().owlCarousel) {
+			$('.wcowlcarousel').each( function() {
+				var $this = $(this);
+				var $owl = $this.children('.owl-carousel');
+				var columns = parseInt( $owl.data('columns') );
+				var columnsTablet = columns - 1;
+				var columnsPhone = columns - 2;
+				var gutterWidth = $owl.data('gutterWidth');
+				var hideControls = $owl.data('hideControls');
+				var showNav = hideControls ? false : true;
+				var containerWidth = $this.width();
+
+				gutterWidth = parseInt( gutterWidth );
+				if ( 1 > columnsTablet ) {
+					columnsTablet = 1;
+				}
+				if ( 1 > columnsPhone ) {
+					columnsPhone = 1;
+				}
+
+				if ( $this.hasClass('wcowlautowidth') ) {
+					$owl.owlCarousel({
+						margin: gutterWidth,
+						loop: false,
+						dots: false,
+						autoWidth: true,
+						responsive: {
+							0:{
+								nav: false,
+							},
+							569:{
+								nav: showNav,
+							}
+						}
+					});
+				}
+				else if ( $this.hasClass('wcowlcolumns') ) {
+					$owl.owlCarousel({
+						margin: gutterWidth,
+						loop: false,
+						dots: false,
+						items: columns,
+						responsive: {
+							0:{
+								nav: false
+							},
+							569:{
+								nav: showNav
+							}
+						}
+					});
+				}
+				else if ( $this.hasClass('wcowlslider') ) {
+					$owl.owlCarousel({
+						margin: 0,
+						loop: false,
+						dots: false,
+						items: 1,
+						autoHeight:true,
+						responsive: {
+							0:{
+								nav: false
+							},
+							569:{
+								nav: showNav
+							}
+						}
+					});
+				}
+			});
+
 		}
 	});
 } )( jQuery );
