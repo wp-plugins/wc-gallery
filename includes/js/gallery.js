@@ -104,7 +104,11 @@
 					type:'image',
 					image: {
 						titleSrc: function(item) {
-							return $(item.el).parent().next('.gallery-caption').html();
+							var caption = $(item.el).parent().next('.gallery-caption').html();
+							if ( 'string' == typeof caption && caption.length > 0 )
+								return caption;
+
+							return '';
 						}
 					}
 				});
@@ -137,69 +141,76 @@
 
 				gutterWidth = parseInt( gutterWidth );
 
-				if ( $flex.hasClass('wcslider') ) {
-					$flex.wcflexslider({
-						prevText: "",
-						nextText: "",
-						smoothHeight: false,
-						slideshow: false,
-						animation:"fade"
-					});
-				}
-				else if ( $flex.hasClass('wcslider2') ) {
-					$flex.wcflexslider({
-						prevText: "",
-						nextText: "",
-						smoothHeight: true,
-						slideshow: false,
-						animation:"slide"
-					});
-				}
-				else if ( $flex.hasClass('wcsliderauto') ) {
-					$flex.wcflexslider({
-						prevText: "",
-						nextText: "",
-						smoothHeight: true,
-						slideshow: true,
-						animation:"slide"
-					});
-				}
-				else if ( $flex.hasClass('wccarousel') ) {
-					$flex.wcflexslider({
-						prevText: "",
-						nextText: "",
-						smoothHeight: false,
-						slideshow: false,
-						animation: "slide",
-						animationLoop: false,
-						itemWidth: 270,
-						itemMargin: gutterWidth
-					});
-				}
-				else if ( $flex.hasClass('wcslider3bottomlinks') || $flex.hasClass('wcslider4bottomlinks') ) {
-					$flex.wcflexslider({
-						prevText: "",
-						nextText: "",
-						smoothHeight: false,
-						slideshow: true,
-						animation:"slide",
-						init: function() {
-							$this.find('.wc-image-links .gallery-item').each( function() {
-								var $link = $(this);
-								var $a = $link.find('.gallery-icon a');
-								if ( 0 < $a.length ) {
-									var href = $a.attr('href');
-									if ( 'string' == typeof( href ) ) {
-										var $caption = $link.find('.gallery-caption');
-										if ( 0 < $caption.length ) {
-											$caption.wrap('<a href="'+href+'"></a>');
+				// imagesLoaded( $flex, function() {
+					if ( $flex.hasClass('wcslider') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: false,
+							directionNav: showNav,
+							animation:"fade"
+						});
+					}
+					else if ( $flex.hasClass('wcslider2') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: false,
+							directionNav: showNav,
+							animation:"slide"
+						});
+					}
+					else if ( $flex.hasClass('wcsliderauto') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: true,
+							directionNav: showNav,
+							animation:"slide"
+						});
+					}
+					else if ( $flex.hasClass('wccarousel') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: false,
+							slideshow: false,
+							directionNav: showNav,
+							animation: "slide",
+							animationLoop: false,
+							itemWidth: 270,
+							itemMargin: gutterWidth
+						});
+					}
+					else if ( $flex.hasClass('wcslider3bottomlinks') || $flex.hasClass('wcslider4bottomlinks') ) {
+						$flex.wcflexslider({
+							prevText: "",
+							nextText: "",
+							smoothHeight: true,
+							slideshow: true,
+							directionNav: showNav,
+							animation:"slide",
+							init: function() {
+								$this.find('.wc-image-links .gallery-item').each( function() {
+									var $link = $(this);
+									var $a = $link.find('.gallery-icon a');
+									if ( 0 < $a.length ) {
+										var href = $a.attr('href');
+										if ( 'string' == typeof( href ) ) {
+											var $caption = $link.find('.gallery-caption');
+											if ( 0 < $caption.length ) {
+												$caption.wrap('<a href="'+href+'"></a>');
+											}
 										}
 									}
-								}
-							}); 
-						}
-					});
-				}
+								}); 
+							}
+						});
+					}
+				// });
 			});
 		}
 		if( jQuery().owlCarousel) {

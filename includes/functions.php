@@ -206,54 +206,56 @@ function wc_gallery_shortcode($blank, $attr) {
 		$output .= "</ul></div>\n";
 		// End of Flex Slider
 
-		// Begin Links
-		$size = 'wccarousel';
-		$size_class = sanitize_html_class( $size );
+		if ( ! empty( $links ) ) {
+			// Begin Links
+			$size = 'wccarousel';
+			$size_class = sanitize_html_class( $size );
 
-		$class = array();
-		$class[] = 'wc-image-links';
-		$class[] = 'wc-gallery-clear';
-		$class[] = 'wc-image-links-' . str_replace( array( 'slider3', 'slider4' ), '', $display );
-		$class[] = 'wc-image-links-' . $display;
-		$class[] = 'wc-image-links-gutter-space-' . $gutterwidth;
+			$class = array();
+			$class[] = 'wc-image-links';
+			$class[] = 'wc-gallery-clear';
+			$class[] = 'wc-image-links-' . str_replace( array( 'slider3', 'slider4' ), '', $display );
+			$class[] = 'wc-image-links-' . $display;
+			$class[] = 'wc-image-links-gutter-space-' . $gutterwidth;
 
-		$output .= "<div class='".implode( ' ', $class )."'>";
+			$output .= "<div class='".implode( ' ', $class )."'>";
 
-		$i = 1;
-		foreach ( $links as $key => $attachment ) {
-			$id = $attachment->ID;
-			$image_output = wc_gallery_get_attachment_link( $id, $size, false, false, false, $targetsize, true, $link_target );
+			$i = 1;
+			foreach ( $links as $key => $attachment ) {
+				$id = $attachment->ID;
+				$image_output = wc_gallery_get_attachment_link( $id, $size, false, false, false, $targetsize, true, $link_target );
 
-			$image_meta  = wp_get_attachment_metadata( $id );
+				$image_meta  = wp_get_attachment_metadata( $id );
 
-			$orientation = '';
-			if ( isset( $image_meta['height'], $image_meta['width'] ) )
-				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
+				$orientation = '';
+				if ( isset( $image_meta['height'], $image_meta['width'] ) )
+					$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
 
-			$output .= "<div class='gallery-item gallery-item-".$i." gallery-item-position-".$pos." gallery-item-attachment-".$id."'>";
-				$output .= "<div class='gallery-block'>";
-					$output .= "
-						<div class='gallery-icon {$orientation}'>
-							$image_output
-						</div>";
-					$caption_text = trim($attachment->post_excerpt);
-
-					if ( ! empty( $caption_text ) ) {
+				$output .= "<div class='gallery-item gallery-item-".$i." gallery-item-position-".$pos." gallery-item-attachment-".$id."'>";
+					$output .= "<div class='gallery-block'>";
 						$output .= "
-							<div class='wp-caption-text gallery-caption'>
-								<h3>
-								" . wptexturize($caption_text) . "
-								</h3>
+							<div class='gallery-icon {$orientation}'>
+								$image_output
 							</div>";
-					}
-				$output .= "</div>";
-			$output .= "</div>";
-			$i++;
-			$pos++;
-		}
+						$caption_text = trim($attachment->post_excerpt);
 
-		$output .= "</div>\n";
-		// End of Links
+						if ( ! empty( $caption_text ) ) {
+							$output .= "
+								<div class='wp-caption-text gallery-caption'>
+									<h3>
+									" . wptexturize($caption_text) . "
+									</h3>
+								</div>";
+						}
+					$output .= "</div>";
+				$output .= "</div>";
+				$i++;
+				$pos++;
+			}
+
+			$output .= "</div>\n";
+			// End of Links
+		}
 
 		$output .= "</div>\n";
 	}
@@ -482,15 +484,6 @@ function wc_gallery_print_media_templates() {
 	?>
 	<script type="text/html" id="tmpl-wc-gallery-settings">
 		<label class="setting">
-			<span><?php _e( 'Display', 'wc_gallery' ); ?></span>
-			<select class="display" name="display" data-setting="display">
-				<?php foreach ( $display_types as $key => $value ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, 'default' ); ?>><?php echo esc_html( $value ); ?></option>
-				<?php endforeach; ?>
-			</select>
-		</label>
-
-		<label class="setting">
 			<span><?php _e( 'Popup Size', 'wc_gallery' ); ?></span>
 			<select class="targetsize" name="targetsize" data-setting="targetsize">
 				<?php
@@ -504,6 +497,15 @@ function wc_gallery_print_media_templates() {
 
 				<?php foreach ( $sizes as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, 'large' ); ?>><?php echo esc_html( $name ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+
+		<label class="setting">
+			<span><?php _e( 'Display', 'wc_gallery' ); ?></span>
+			<select class="display" name="display" data-setting="display">
+				<?php foreach ( $display_types as $key => $value ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, 'default' ); ?>><?php echo esc_html( $value ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</label>
